@@ -1,0 +1,81 @@
+---
+swagger: "2.0"
+info:
+  description: "This is a simple API"
+  version: "1.0.0"
+  title: "Simple Inventory API"
+  contact:
+    email: "you@your-company.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "virtserver.swaggerhub.com"
+basePath: "/benengr/dash_manager/1.0.0"
+tags:
+- name: "boards"
+  description: "Operations that configure the board list"
+schemes:
+- "https"
+paths:
+  /boards:
+    get:
+      tags:
+      - "boards"
+      summary: "List the dashboards that will be displayed"
+      description: "This shows the list of URLs that will be displayed\n"
+      operationId: "list_boards"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "search results matching criteria"
+          schema:
+            $ref: "#/definitions/BoardConfig"
+        400:
+          description: "bad input parameter"
+      x-swagger-router-controller: "swagger_server.controllers.boards_controller"
+    post:
+      tags:
+      - "boards"
+      summary: "Sets the dashboards to be displayed"
+      description: "Sets the list of boards that will be displayed.  Note that\nthis\
+        \ overwrites the current list.\n"
+      operationId: "set_boards"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "boardList"
+        description: "List of boards to display"
+        required: false
+        schema:
+          $ref: "#/definitions/BoardConfig"
+      responses:
+        201:
+          description: "Board configuration updated"
+        400:
+          description: "invalid input, object invalid"
+      x-swagger-router-controller: "swagger_server.controllers.boards_controller"
+definitions:
+  BoardConfig:
+    type: "object"
+    required:
+    - "boardList"
+    - "delay"
+    properties:
+      boardList:
+        type: "array"
+        items:
+          type: "string"
+          format: "uri"
+      delay:
+        type: "integer"
+        description: "The number of seconds that each dashboard will display"
+    example:
+      delay: 0
+      boardList:
+      - "http://example.com/aeiou"
+      - "http://example.com/aeiou"

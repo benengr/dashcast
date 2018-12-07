@@ -1,0 +1,8 @@
+{
+	"boardList": [
+		"http://www.google.com",
+        "http://www.xkcd.com",
+        "http://yahoo.com"
+	],
+	"delay": 120
+}
