@@ -1,16 +1,12 @@
 import connexion
-import six
 import logging
-import json
 import ast
-
+from swagger_server.models.page_updater import PageUpdater
 from swagger_server.models.board_config import BoardConfig  # noqa: E501
-from swagger_server import util
 
-print("Creating initial config")
-config = BoardConfig()
 config_file = "config.store"
 logger = logging.getLogger()
+
 
 def read_config():
     try:
@@ -18,13 +14,18 @@ def read_config():
         with open(config_file, 'r') as f:
             config_string = f.read()
         print("Config string is: {}".format(config_string))
-        config = BoardConfig.from_dict(ast.literal_eval(config_string))
-        print("config is {}".format(str(config)))
+        pvt_config = BoardConfig.from_dict(ast.literal_eval(config_string))
+        print("config is {}".format(str(pvt_config)))
     except Exception as e:
         print('Exception in read_config')
         print(e)
-        config = {}
-    return config
+        pvt_config = {}
+    return pvt_config
+
+
+config = read_config()
+update = PageUpdater(config)
+
 
 def list_boards():  # noqa: E501
     """List the dashboards that will be displayed
@@ -48,6 +49,7 @@ def set_boards(boardList=None):  # noqa: E501
 
     :rtype: None
     """
+    global config
     logger.error("\tboardList is {}".format(str(boardList)))
     to_store = boardList
     if connexion.request.is_json:
@@ -59,4 +61,5 @@ def set_boards(boardList=None):  # noqa: E501
     with open(config_file, 'w') as f:
         print('writing to file')
         f.write(str(to_store))
+    update.reload_config(config)
     return config
