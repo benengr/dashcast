@@ -10,7 +10,7 @@ info:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 host: "virtserver.swaggerhub.com"
-basePath: "/benengr/dash_manager/1.0.0"
+basePath: "/dash_manager/v1"
 tags:
 - name: "boards"
   description: "Operations that configure the board list"
