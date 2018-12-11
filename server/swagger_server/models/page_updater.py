@@ -1,32 +1,54 @@
 import webbrowser
-import asyncio
-from threading import Timer
+from threading import Timer, Lock
 
 
-def timer_function(args):
-    page_updater = args[0]
-    page_updater.show_next()
+def timer_function(updater):
+    updater.show_next()
 
 
 class PageUpdater:
     def __init__(self, config):
         self.config = config
-        self.lock = asyncio.Lock()
+        print("*** PageUpdater Created ***")
+        print(self.config)
+        self.lock = Lock()
         self.config_index = 0
         self.timer = None
         self.show_next()
 
+    def internal_show_next(self):
+        url = self.config.board_list[self.config_index]
+        print("*** Setting display to {} ***".format(url))
+        self.config_index += 1
+        if self.config_index >= len(self.config.board_list):
+            self.config_index = 0
+        self.timer = Timer(self.config.delay, timer_function, [self])
+        self.timer.start()
+
+    def internal_restart(self):
+        if self.timer is not None:
+            self.timer.cancel()
+            self.timer = None
+        self.config_index = 0
+
     def show_next(self):
-        async with self.lock:
-            webbrowser.open(self.config.board_list[self.config_index])
-            self.config_index += 1
-            if self.config_index >= len(self.config.board_list):
-                self.config_index = 0
-            self.timer = Timer(self.config.delay, timer_function, [self])
-            self.timer.start()
+        print("*** show_next acquiring ***")
+        self.lock.acquire()
+        print("*** show_next acquired ***")
+        try:
+            self.internal_show_next()
+        finally:
+            print("*** show_next release ***")
+            self.lock.release()
 
     def reload_config(self, config):
-        async with self.lock:
+        print("*** reload_config acquiring ***")
+        self.lock.acquire()
+        print("*** reload_config acquired ***")
+        try:
             self.config = config
-            self.config_index = 0
-            self.show_next()
+            self.internal_restart()
+            self.internal_show_next()
+        finally:
+            print("*** reload_config release ***")
+            self.lock.release()
