@@ -20,7 +20,11 @@ class App extends Component {
 
   render_urls(urls) {
     return urls.map((url, index) => {
-      return (<input type="text" defaultValue={url} key={index}/>);
+      return (
+        <div className="form-group" key={index}>
+          <input className="form-control" type="text" defaultValue={url}/>
+        </div>
+      );
     });
   }
 
@@ -36,9 +40,13 @@ class App extends Component {
     console.info(`config is: ${JSON.stringify(this.state.config)}`);
     return (
       <div className="App">
+        <form>
           { this.render_urls(this.state.config.boardList) }
-          Delay:
-          <input type="number" defaultValue={this.state.config.delay} />
+          <div className="form-group">
+            <label htmlFor="delayInput">Delay</label>
+            <input type="number" className="form-control" id="delayInput" defaultValue={this.state.config.delay} />
+          </div>
+        </form>
       </div>
     );
   }
