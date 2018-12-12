@@ -13,8 +13,14 @@ class App extends Component {
 
   get_config() {
     axios.get('/dash_manager/v1/boards').then(res => {
-      console.log(res);
+      console.log(`Setting state to ${JSON.stringify(res.data)}`);
       this.setState({config: res.data});
+    });
+  }
+
+  render_urls(urls) {
+    return urls.map((url, index) => {
+      return (<input type="text" defaultValue={url} key={index}/>);
     });
   }
 
@@ -27,16 +33,19 @@ class App extends Component {
   }
 
   render_config() {
+    console.info(`config is: ${JSON.stringify(this.state.config)}`);
     return (
       <div className="App">
-          {this.state.config.toString()}
+          { this.render_urls(this.state.config.boardList) }
+          Delay:
+          <input type="number" defaultValue={this.state.config.delay} />
       </div>
     );
   }
 
   render() {
     if(this.state === null) {
-      console.log("Waiting for staet")
+      console.log("Waiting for state")
       return this.render_loading();
     } else {
       console.log("Have config");
