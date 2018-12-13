@@ -64,8 +64,22 @@ class App extends Component {
     console.info(`state is: ${JSON.stringify(this.state)}`);
     return (
       <div className="App">
-        <form>
-          { this.render_urls(this.state.boardList) }
+        <form className="configForm">
+          <div className="inputs">
+            <div className="urlInputs">
+              { this.render_urls(this.state.boardList) }
+            </div>
+            <div className="otherConfig">
+              <div className="form-group">
+                <label>Delay</label>
+                <input className="form-control" type="number" value={this.state.delay} />
+              </div>
+            </div>
+          </div>
+          <div className="buttons">
+            
+            <button className="btn btn-primary">Submit</button>
+          </div>
         </form>
       </div>
     );
