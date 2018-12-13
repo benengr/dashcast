@@ -33,10 +33,21 @@ class App extends Component {
     this.setState({boardList: newUrls});
   }
 
+  handleRemoveUrl(event, index) {
+    this.setState({
+      boardList: this.state.boardList.filter((url, idx) => {
+        return idx !== index;
+      })
+    });
+  }
+
   render_urls(urls) {
-    return urls.map((url, index) => {
+    return urls.map((url, index ) => {
       return (
-        <input className="form-control" key={index} type="text" value={url} onChange={(e) => {this.handleUrlChange(e, index)}} />
+        <div className="form-group url-input" key={index} >
+          <input className="form-control" type="text" value={url} onChange={(e) => {this.handleUrlChange(e, index)}} />
+          <button type="button" onClick={(e) => this.handleRemoveUrl(e, index)} className='btn btn-secondary' />
+        </div>
       );
     });
   }
@@ -55,19 +66,6 @@ class App extends Component {
       <div className="App">
         <form>
           { this.render_urls(this.state.boardList) }
-          
-          <div className="form-group">
-            <label htmlFor="delayInput">Delay</label>
-            <input type="number" className="form-control" id="delayInput" defaultValue={this.state.delay} />
-
-          </div>
-          <span className="glyphicon glyphicon-search" aria-hidden="true"></span>
-          <button type="button" className="btn btn-default">
-            Add
-          </button>
-          <button type="button" className="btn btn-default">
-            <span className="glyphicon glyphicon-align-left" aria-hidden="true"></span>
-          </button>
         </form>
       </div>
     );
