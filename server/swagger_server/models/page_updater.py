@@ -14,10 +14,13 @@ class PageUpdater:
         self.lock = Lock()
         self.config_index = 0
         self.timer = None
-        self.show_next()
         self.driver = webdriver.Chrome()
+        self.show_next()
+        print("*** PageUpdate create finished")
 
     def internal_show_next(self):
+        if len(self.config.board_list) == 0:
+            return
         url = self.config.board_list[self.config_index]
         print("*** Setting display to {} ***".format(url))
         self.driver.get(url)
