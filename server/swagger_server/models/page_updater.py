@@ -1,4 +1,4 @@
-import webbrowser
+from selenium import webdriver
 from threading import Timer, Lock
 
 
@@ -15,10 +15,12 @@ class PageUpdater:
         self.config_index = 0
         self.timer = None
         self.show_next()
+        self.driver = webdriver.Chrome()
 
     def internal_show_next(self):
         url = self.config.board_list[self.config_index]
         print("*** Setting display to {} ***".format(url))
+        self.driver.get(url)
         self.config_index += 1
         if self.config_index >= len(self.config.board_list):
             self.config_index = 0
