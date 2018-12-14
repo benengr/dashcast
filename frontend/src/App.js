@@ -3,6 +3,8 @@ import ReactLoading from 'react-loading';
 import './App.css';
 import axios from 'axios';
 
+const CONFIG_ENDPOINT = '/dash_manager/v1/boards';
+
 class App extends Component {
 
   constructor(props) {
@@ -14,14 +16,39 @@ class App extends Component {
     this.get_config();
   }
 
-  get_config() {
-    axios.get('/dash_manager/v1/boards').then(res => {
-      console.log(`Setting state to ${JSON.stringify(res.data)}`);
-      this.setState({
-        boardList: res.data.boardList,
-        delay: res.data.delay
-      });
+  reset_state() {
+    this.setState({
+      boardList: null,
+      delay: null
     });
+  }
+
+  set_config(config) {
+    this.setState({
+      boardList: config.boardList,
+      delay: config.delay
+    });
+  }
+
+  get_config() {
+    axios.get(CONFIG_ENDPOINT).then(res => {
+      console.log(`Setting state to ${JSON.stringify(res.data)}`);
+      this.set_config(res.data);
+    });
+  }
+
+  post_config(event) {
+    console.log(`Current config is ${JSON.stringify(this.state)}`);
+    const data = {
+      boardList: this.state.boardList,
+      delay: parseInt(this.state.delay)
+    };
+    console.log(`Data is ${JSON.stringify(data)}`);
+    this.reset_state();
+    axios.post(CONFIG_ENDPOINT, data).then(res => {
+      this.set_config(res.data);
+    });
+    event.preventDefault();
   }
 
   handleUrlChange(event, index) {
@@ -39,6 +66,10 @@ class App extends Component {
         return idx !== index;
       })
     });
+  }
+
+  handleChangeDelay(event) {
+    this.setState({delay: event.target.value});
   }
 
   render_urls(urls) {
@@ -72,13 +103,13 @@ class App extends Component {
             <div className="otherConfig">
               <div className="form-group">
                 <label>Delay</label>
-                <input className="form-control" type="number" value={this.state.delay} />
+                <input className="form-control" type="number" value={this.state.delay} onChange={(e) => this.handleChangeDelay(e)}/>
               </div>
             </div>
           </div>
           <div className="buttons">
-            
-            <button className="btn btn-primary">Submit</button>
+            <button className="btn btn-secondary" type="button" onClick={(e) => this.get_config()}>Reload</button>
+            <button className="btn btn-primary" onClick={(e) => this.post_config(e)}>Submit</button>
           </div>
         </form>
       </div>
