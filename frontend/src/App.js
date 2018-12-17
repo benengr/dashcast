@@ -83,7 +83,7 @@ class App extends Component {
       return (
         <div className="form-group url-input" key={index} >
           <input className="form-control" type="text" value={url} onChange={(e) => {this.handleUrlChange(e, index)}} />
-          <button type="button" onClick={(e) => this.handleRemoveUrl(e, index)} className='btn btn-secondary' />
+          <button type="button" onClick={(e) => this.handleRemoveUrl(e, index)} className='btn btn-secondary'>-</button>
         </div>
       );
     });
