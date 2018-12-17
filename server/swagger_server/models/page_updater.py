@@ -14,7 +14,9 @@ class PageUpdater:
         self.lock = Lock()
         self.config_index = 0
         self.timer = None
-        self.driver = webdriver.Chrome()
+        print("*** Creating Webdriver ***")
+        self.driver = webdriver.Firefox()
+        print("*** Webdriver Created ***")
         self.show_next()
         print("*** PageUpdate create finished")
 
