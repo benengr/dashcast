@@ -68,6 +68,12 @@ class App extends Component {
     });
   }
 
+  handleAddUrl(event) {
+    const newUrls = this.state.boardList;
+    newUrls.push('');
+    this.setState({boardList: newUrls});
+  }
+
   handleChangeDelay(event) {
     this.setState({delay: event.target.value});
   }
@@ -108,6 +114,7 @@ class App extends Component {
             </div>
           </div>
           <div className="buttons">
+            <button className="btn btn-secondary" type="button" onClick={(e) => this.handleAddUrl(e)}>Add Board</button>
             <button className="btn btn-secondary" type="button" onClick={(e) => this.get_config()}>Reload</button>
             <button className="btn btn-primary" onClick={(e) => this.post_config(e)}>Submit</button>
           </div>
