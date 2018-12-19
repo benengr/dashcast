@@ -14,12 +14,15 @@ def read_config():
         with open(config_file, 'r') as f:
             config_string = f.read()
         print("Config string is: {}".format(config_string))
-        pvt_config = BoardConfig.from_dict(ast.literal_eval(config_string))
-        print("config is {}".format(str(pvt_config)))
+        my_obj = ast.literal_eval(config_string)
+        pvt_config = BoardConfig(board_list=my_obj['boardList'], delay=my_obj['delay'])
     except Exception as e:
-        print('Exception in read_config')
-        print(e)
-        pvt_config = {}
+        print('Exception in read_config: {}'.format(e))
+        pvt_config = {
+            "board_list": [],
+            "delay": 100000
+        }
+        pvt_config = BoardConfig(board_list=[], delay=10000)
     return pvt_config
 
 

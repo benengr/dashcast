@@ -1,4 +1,4 @@
-import webbrowser
+from selenium import webdriver
 from threading import Timer, Lock
 
 
@@ -14,11 +14,18 @@ class PageUpdater:
         self.lock = Lock()
         self.config_index = 0
         self.timer = None
+        print("*** Creating Webdriver ***")
+        self.driver = webdriver.Firefox()
+        print("*** Webdriver Created ***")
         self.show_next()
+        print("*** PageUpdate create finished")
 
     def internal_show_next(self):
+        if len(self.config.board_list) == 0:
+            return
         url = self.config.board_list[self.config_index]
         print("*** Setting display to {} ***".format(url))
+        self.driver.get(url)
         self.config_index += 1
         if self.config_index >= len(self.config.board_list):
             self.config_index = 0
